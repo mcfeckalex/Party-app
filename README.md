@@ -80,3 +80,25 @@ configuration needed beyond having the SDK installed.
 > Gradle build itself hasn't been run here — the code has been written and
 > reviewed carefully, but give `./gradlew assembleDebug` a run locally
 > before you rely on it.
+
+## CI / Releases
+
+Two GitHub Actions workflows build the APK in CI (where a full Android SDK
+is available):
+
+- **`.github/workflows/build.yml`** — runs on every push to `main` /
+  `claude/**` and on pull requests. Builds a debug APK and uploads it as a
+  workflow artifact (Actions tab → the run → Artifacts).
+- **`.github/workflows/release.yml`** — runs when you push a tag like
+  `v1.0.0` (or trigger it manually from the Actions tab). Builds the debug
+  APK and publishes it as a downloadable asset on a GitHub Release.
+
+Both build the **debug** variant, which is auto-signed with the standard
+Android debug keystore — installable directly on a phone (enable "install
+unknown apps" for whatever app you use to open the file) without needing to
+set up release signing/keystore secrets. To cut a new release:
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
